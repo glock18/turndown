@@ -22,6 +22,11 @@ var escapes = [
   [/^(\d+)\. /g, '$1\\. ']
 ]
 
+var htmlEscapes = [
+  [/&/g, '&amp;'],
+  [/</g, '&lt;'],
+];
+
 export default function TurndownService (options) {
   if (!(this instanceof TurndownService)) return new TurndownService(options)
 
@@ -144,6 +149,12 @@ TurndownService.prototype = {
     return escapes.reduce(function (accumulator, escape) {
       return accumulator.replace(escape[0], escape[1])
     }, string)
+  },
+
+  escapeHtml: function (string) {
+    return htmlEscapes.reduce(function (accumulator, escape) {
+      return accumulator.replace(escape[0], escape[1])
+    }, string);
   }
 }
 
@@ -162,7 +173,7 @@ function process (parentNode) {
 
     var replacement = ''
     if (node.nodeType === 3) {
-      replacement = self.escape(node.nodeValue)
+      replacement = self.escapeHtml(node.isCode ? node.nodeValue : self.escape(node.nodeValue));
     } else if (node.nodeType === 1) {
       replacement = replacementForNode.call(self, node)
     }
