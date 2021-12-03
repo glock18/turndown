@@ -708,7 +708,7 @@ var TurndownService = (function () {
     [/^(=+)/g, '\\$1'],
     [/^(#{1,6}) /g, '\\$1 '],
     [/`/g, '\\`'],
-    [/\~/g, '\\~'],
+    [/~/g, '\\~'],
     // [/^~~~/g, '\\~~~'],
     [/\[/g, '\\['],
     [/\]/g, '\\]'],
@@ -719,10 +719,10 @@ var TurndownService = (function () {
     [/^(\d+)\. /g, '$1\\. ']
   ];
 
-  var htmlEscapes = [
-    [/&/g, '&amp;'],
-    [/</g, '&lt;'],
-  ];
+  // var htmlEscapes = [
+  //   [/&/g, '&amp;'],
+  //   [/</g, '&lt;'],
+  // ];
 
   function TurndownService (options) {
     if (!(this instanceof TurndownService)) return new TurndownService(options)
@@ -846,13 +846,13 @@ var TurndownService = (function () {
       return escapes.reduce(function (accumulator, escape) {
         return accumulator.replace(escape[0], escape[1])
       }, string)
-    },
-
-    escapeHtml: function (string) {
-      return htmlEscapes.reduce(function (accumulator, escape) {
-        return accumulator.replace(escape[0], escape[1])
-      }, string);
     }
+
+    // escapeHtml: function (string) {
+    //   return htmlEscapes.reduce(function (accumulator, escape) {
+    //     return accumulator.replace(escape[0], escape[1])
+    //   }, string);
+    // }
   };
 
   /**
@@ -870,7 +870,7 @@ var TurndownService = (function () {
 
       var replacement = '';
       if (node.nodeType === 3) {
-        replacement = self.escapeHtml(node.isCode ? node.nodeValue : self.escape(node.nodeValue));
+        replacement = node.isCode ? node.nodeValue : self.escape(node.nodeValue);
       } else if (node.nodeType === 1) {
         replacement = replacementForNode.call(self, node);
       }
